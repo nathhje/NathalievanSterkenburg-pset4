@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void fetchCursor() {
         Cursor cursor = dbManager.fetch();
+
+        // what is this for
         todoAdapter.changeCursor(cursor);
     }
 
