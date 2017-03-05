@@ -83,13 +83,15 @@ public class MainActivity extends AppCompatActivity {
             // find fields to populate in inflated template
             TextView listitem = (TextView) findViewById(R.id.listitem);
 
-            Log.i("is het", "hier");
+            Log.i("listitem", String.valueOf(listitem));
             String body = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.SUBJECT));
-            Log.i("dus hier", body);
-            // populate fields with extracted properties
+            Log.i("body", body);
+
+            // as it turns out my listitem is Null at this point, I just don't know why
+            // btw, it does work when my database is empty
             listitem.setText(body);
 
-            Log.i("he", "ik snap het niet");
+            Log.i("hier", "kom ik niet meer");
         }
     }
 
