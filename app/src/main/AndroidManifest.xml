@@ -9,6 +9,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
+            <receiver android:name="com.google.android.gms.measurement.AppMeasurementReceiver"
+                android:enabled="true">
+                <intent-filter>
+                    <action android:name="com.google.android.gms.measurement.UPLOAD" />
+                    <action android:name="com.android.vending.INSTALL_REFERRER"/>
+                </intent-filter>
+            </receiver>
+            <service android:name="com.google.android.gms.measurement.AppMeasurementService"
+                android:enabled="true"
+                android:exported="false"/>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

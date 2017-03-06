@@ -3,5 +3,6 @@
     <string name="remove">Remove</string>
     <string name="done">Done</string>
     <string name="add">Add</string>
-    <string name="newtodo">new to do</string>
+    <string name="newtodo">add something you need to do</string>
+    <string name="instructions">Welcome, click on an item to check it or hold an item to remove it.</string>
 </resources>

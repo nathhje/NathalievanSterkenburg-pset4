@@ -2,6 +2,9 @@ package com.example.gebruiker.nathalievansterkenburg_pset4;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,9 +14,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.security.auth.Subject;
@@ -25,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private DBManager dbManager;
     private EditText newtodo;
     private ListView todolist;
+    private Drawable background;;
+    ArrayList<Long> checked = new ArrayList<>();
     TodoCursorAdapter todoAdapter;
 
     @Override
@@ -33,17 +41,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         newtodo = (EditText) findViewById(R.id.newtodo);
+        Log.i("wat is dit", String.valueOf(newtodo));
 
         // initialize DB
         dbManager = new DBManager(this);
         dbManager.open();
 
         // get data from DB
-        Cursor cursor = dbManager.fetch();
+        Cursor cursor = dbManager.fetch(null);
         todoAdapter = new TodoCursorAdapter(this, cursor);
 
         // set cursor adapter to ListView
         todolist = (ListView) findViewById(R.id.todolist);
+        background = todolist.getBackground();
         todolist.setAdapter(todoAdapter);
         Log.i("kom ik", "hier dan nog wel");
         setListener();
@@ -60,15 +70,22 @@ public class MainActivity extends AppCompatActivity {
     public void AddToList(View view) {
         final String entry = newtodo.getText().toString();
         dbManager.insert(entry);
+        newtodo.setText("");
 
         fetchCursor();
     }
 
     public void fetchCursor() {
-        Cursor cursor = dbManager.fetch();
+        Cursor cursor = dbManager.fetch(null);
 
         // what is this for
         todoAdapter.changeCursor(cursor);
+    }
+
+    public void RemoveFromList(View view) {
+    }
+
+    public void ItemDone(View view) {
     }
 
     public class TodoCursorAdapter extends CursorAdapter {
@@ -83,15 +100,20 @@ public class MainActivity extends AppCompatActivity {
         public void bindView(View view, Context context, Cursor cursor) {
 
             // find fields to populate in inflated template
-            TextView listitem = (TextView) findViewById(R.id.listitem);
+            TextView listitem = (TextView) view.findViewById(R.id.listitem);
+            ImageView checked = (ImageView) view.findViewById(R.id.checked);
 
             Log.i("listitem", String.valueOf(listitem));
             String body = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.SUBJECT));
             Log.i("body", body);
+            String checkImage = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.DONE));
+            int theImage = getResources().getIdentifier(checkImage, "drawable", getPackageName());
+            Drawable drawable = getResources().getDrawable(theImage);
 
             // as it turns out my listitem is Null at this point, I just don't know why
             // btw, it does work when my database is empty
             listitem.setText(body);
+            checked.setBackground(drawable);
 
             Log.i("hier", "kom ik niet meer");
         }
@@ -113,13 +135,24 @@ public class MainActivity extends AppCompatActivity {
         todolist.setOnItemClickListener((new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//                todolist.clearChoices();
+//                todolist.setItemChecked(position, true);
                 Log.d("text", todolist.getItemAtPosition(position).toString());
-                String itemToEdit = "[DONE]" + todolist.getItemAtPosition(position).toString();
 
-                Cursor cursor = (Cursor) todolist.getItemAtPosition(position);
-                itemToEdit = "[DONE]" + cursor.getString(cursor.getColumnIndex(DatabaseHelper.SUBJECT));
+                Cursor cursor = dbManager.fetch(DatabaseHelper._ID + " = " + id);
+                String image = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.DONE));
+                Log.i("is dit het", image);
 
-                dbManager.update(id, itemToEdit);
+//                image = DatabaseHelper.CROSS;
+                if (image.equals(DatabaseHelper.CHECK)) {
+                    image = DatabaseHelper.CROSS;
+                }
+                else {
+                    image = DatabaseHelper.CHECK;
+                }
+
+                dbManager.update(id, image);
                 fetchCursor();
             }
         }));

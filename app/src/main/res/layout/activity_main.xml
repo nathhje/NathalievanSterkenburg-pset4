@@ -10,12 +10,21 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.gebruiker.nathalievansterkenburg_pset4.MainActivity">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="@string/instructions"
+        android:textSize="17sp"
+        android:id="@+id/instructions"/>
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="350dp"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/instructions"
+        android:listSelector="@color/colorAccent"
         android:id="@+id/todolist"
-        android:layout_marginBottom="40dp"/>
+        android:layout_marginBottom="45dp"/>
     
     <Button
         android:layout_width="wrap_content"
@@ -25,6 +34,8 @@
         android:layout_marginRight="30dp"
         android:layout_marginEnd="30dp"
         android:text="@string/remove"
+        android:onClick="RemoveFromList"
+        android:visibility="gone"
         android:id="@+id/remove"/>
 
     <Button
@@ -35,6 +46,8 @@
         android:layout_toRightOf="@id/remove"
         android:layout_toEndOf="@id/remove"
         android:text="@string/done"
+        android:visibility="gone"
+        android:onClick="ItemDone"
         android:id="@+id/done"/>
 
     <EditText
