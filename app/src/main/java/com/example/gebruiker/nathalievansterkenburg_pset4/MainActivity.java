@@ -109,9 +109,7 @@ public class MainActivity extends AppCompatActivity {
             String checkImage = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.DONE));
             int theImage = getResources().getIdentifier(checkImage, "drawable", getPackageName());
             Drawable drawable = getResources().getDrawable(theImage);
-
-            // as it turns out my listitem is Null at this point, I just don't know why
-            // btw, it does work when my database is empty
+            
             listitem.setText(body);
             checked.setBackground(drawable);
 
